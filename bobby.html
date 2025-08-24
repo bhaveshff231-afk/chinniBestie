@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta charset="UTF-8">
+  <title>Happy Birthday Bestie!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      background: #ffdde1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      font-family: 'Poppins', sans-serif;
+      position: relative;
+    }
+
+    /* Background slideshow */
+    .slideshow {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -2;
+      overflow: hidden;
+    }
+    .slideshow img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      animation: slideShow 20s infinite;
+    }
+    .slideshow img:nth-child(1) { animation-delay: 0s; }
+    .slideshow img:nth-child(2) { animation-delay: 5s; }
+    .slideshow img:nth-child(3) { animation-delay: 10s; }
+
+    @keyframes slideShow {
+      0% {opacity: 0;}
+      10% {opacity: 1;}
+      25% {opacity: 1;}
+      35% {opacity: 0;}
+      100% {opacity: 0;}
+    }
+
+    /* Center birthday text */
+    .center-text {
+      text-align: center;
+      color: white;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.4);
+      z-index: 1;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(2em, 6vw, 3.5em);
+      margin: 0;
+      animation: glow 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from { text-shadow: 0 0 10px #ff6f61, 0 0 20px #ff4081; }
+      to { text-shadow: 0 0 20px #ff6f61, 0 0 40px #ff4081; }
+    }
+
+    .sub-text {
+      margin-top: 10px;
+      font-size: clamp(1em, 3.5vw, 1.3em);
+      font-weight: 600;
+    }
+
+    button {
+      margin-top: 20px;
+      font-size: clamp(14px, 4vw, 18px);
+      padding: 10px 20px;
+      border: none;
+      border-radius: 30px;
+      background: #ff6f61;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #e85a50;
+      transform: scale(1.05);
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: absolute;
+      bottom: -50px;
+      font-size: 24px;
+      color: #ffffff;
+      animation: floatUp 6s linear infinite;
+      z-index: 0;
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-110vh) scale(1.5); opacity: 0; }
+    }
+
+    /* Confetti shower (falling) */
+    .confetti-shower {
+      position: fixed;
+      width: 8px;
+      height: 14px;
+      top: -20px;
+      opacity: 0.9;
+      border-radius: 3px;
+      animation: fall linear forwards;
+      z-index: 20;
+    }
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+    }
+
+    /* Firework explosion particles */
+    .firework {
+      position: fixed;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+      pointer-events: none;
+      animation: fireworkBlast 1.5s ease-out forwards;
+      z-index: 200;
+    }
+    @keyframes fireworkBlast {
+      from { transform: translate(0,0) scale(1); opacity: 1; }
+      to { transform: translate(var(--x), var(--y)) scale(0.5); opacity: 0; }
+    }
+
+    /* Video popup */
+    .video-popup {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      z-index: 1000;
+      display: none;
+      text-align: center;
+    }
+.video-popup video {
+  width: 100%;
+  height: auto;
+  max-width: 95vw;
+  max-height: 70vh;
+  border-radius: 10px;
+}
+
+    .close-btn {
+      margin-top: 10px;
+      padding: 8px 20px;
+      background: #ff4081;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .close-btn:hover {
+      background: #e73370;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slideshow background -->
+  <div class="slideshow">
+    <img src="pic1.jpg" alt="Bestie 1">
+    <img src="pic2.jpg" alt="Bestie 2">
+    <img src="pic3.jpg" alt="Bestie 3">
+  </div>
+
+  <div class="center-text">
+    <h1>🎂 Happy Birthday Bestie 🎉</h1>
+    <div class="sub-text">💖 Wishing you endless love, smiles & joy 💖</div>
+    <button onclick="celebrate()">Celebrate 🎊</button>
+  </div>
+
+  <!-- Video popup -->
+  <div class="video-popup" id="videoPopup">
+    <video id="birthdayVideo" controls autoplay></video><br>
+    <button class="close-btn" onclick="closeVideo()">❌ Close</button>
+  </div>
+
+  <script>
+    // Floating hearts with name RABBITUUUUU ❤️
+    function createHearts() {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.innerHTML = "RABBITUUUUUUU 💛";
+      heart.style.left = Math.random() * window.innerWidth + "px";
+      heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+      document.body.appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 6000);
+    }
+    setInterval(createHearts, 800);
+
+    // Confetti shower (continuous falling)
+    function confettiShower() {
+      const confetti = document.createElement("div");
+      confetti.classList.add("confetti-shower");
+      confetti.style.left = Math.random() * window.innerWidth + "px";
+      confetti.style.backgroundColor = randomColor();
+      confetti.style.animationDuration = (Math.random() * 3 + 4) + "s";
+      document.body.appendChild(confetti);
+      setTimeout(() => { confetti.remove(); }, 7000);
+    }
+    setInterval(confettiShower, 200);
+
+    // Firework explosion in sky 🎆
+    function firework(x, y) {
+      for (let i = 0; i < 40; i++) {
+        let spark = document.createElement("div");
+        spark.classList.add("firework");
+
+        let angle = Math.random() * 2 * Math.PI;
+        let distance = Math.random() * 200 + 50;
+        let dx = Math.cos(angle) * distance + "px";
+        let dy = Math.sin(angle) * distance + "px";
+
+        spark.style.left = x + "px";
+        spark.style.top = y + "px";
+        spark.style.setProperty("--x", dx);
+        spark.style.setProperty("--y", dy);
+        spark.style.background = randomColor();
+
+        document.body.appendChild(spark);
+        setTimeout(() => spark.remove(), 1500);
+      }
+    }
+
+    // Trigger random fireworks in the sky
+    function startSkyFireworks() {
+      setInterval(() => {
+        let x = Math.random() * window.innerWidth;
+        let y = Math.random() * (window.innerHeight / 2); // top half like sky
+        firework(x, y);
+      }, 2500);
+    }
+
+    // Celebrate button
+    function celebrate() {
+      firework(window.innerWidth / 2, window.innerHeight / 2); // big blast center
+      startSkyFireworks();
+
+      // 🎬 Video popup
+      const videos = ["chinnii - Copy.mp4"];
+      const randomVideo = videos[Math.floor(Math.random() * videos.length)];
+      let popup = document.getElementById("videoPopup");
+      let videoElement = document.getElementById("birthdayVideo");
+      videoElement.src = randomVideo;
+      popup.style.display = "block";
+      videoElement.play();
+    }
+
+    // Close video popup
+    function closeVideo() {
+      let popup = document.getElementById("videoPopup");
+      let videoElement = document.getElementById("birthdayVideo");
+      videoElement.pause();
+      videoElement.currentTime = 0;
+      popup.style.display = "none";
+    }
+
+    // Random confetti colors
+    function randomColor() {
+      const colors = ["#ff6f61", "#ffeb3b", "#4fc3f7", "#81c784", "#ba68c8", "#f06292", "#ffffff"];
+      return colors[Math.floor(Math.random() * colors.length)];
+    }
+  </script>
+
+</body>
+</html>
